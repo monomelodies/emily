@@ -1,7 +1,7 @@
 {
-    "name": "monomelodies/monolyth",
-    "description": "Object oriented PHP5 MVC unframework",
-    "keywords": ["PHP","OO","MVC","framework","unframework"],
+    "name": "monomelodies/emily",
+    "description": "Twig-based PHP mailer",
+    "keywords": ["PHP","Twig","mail"],
     "license": "MIT",
     "authors": [
         {
@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Monolyth\\": "src"
+            "Emily\\": "src"
         }
     }
 }
