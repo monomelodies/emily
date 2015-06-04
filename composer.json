@@ -1,0 +1,24 @@
+{
+    "name": "monomelodies/monolyth",
+    "description": "Object oriented PHP5 MVC unframework",
+    "keywords": ["PHP","OO","MVC","framework","unframework"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marijn Ophorst",
+            "email": "marijn@monomelodies.nl"
+        }
+    ],
+    "require": {
+        "twig/twig": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=4",
+        "phpunit/dbunit": ">=1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Monolyth\\": "src"
+        }
+    }
+}
