@@ -1,0 +1,5 @@
+site_name: Emily documentation
+pages:
+- Home:
+    - 'Quickstart': 'index.md'
+    
