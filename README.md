@@ -4,110 +4,65 @@ Twig and Swift_Mailer-based mailer
 Emily is an extension to [Swift_Mailer](http://swiftmailer.org) adding support
 for the following:
 
-- Load Twig templates either from disk or some other source (database etc.)
-- Easy environment setting (mails sent during development get redirected)
-- Integration with SASS-based variables
-- Auto-insert guesstimated text part if only HTML was given
+- Load Twig templates either from disk or some other source (database etc.);
+- Define blocks for various sections (subject, sender, body etc.) allowing
+  all mail data to be stored in one template;
+- Auto-insert guesstimated text part if only HTML was given.
 
 ## Usage
-At the most basic level, you can simply use Emily like you would Swift:
+Define an `Emily\Message` and setup a Twig template:
 
 ```php
 <?php
 
-use Emily\Email;
+use Emily\Message;
 
-$message = Email::newInstance('my subject')
-    ->setBody('Howdy!')
-    ->addPart('<p>Howdy!</p>', 'text/html')
-    ->setFrom(['joe@developer.com' => 'Joe Developer'])
-    ->setTo(['alice@wonderland.com' => 'Alice']);
+$msg = new Message(new Twig_Loader_Filesystem('/path/to/templates'));
+$msg->loadTemplate('path/to/template.html.twig');
+$swift = $msg->get();
+// Now, send $swift using regular transport.
 
 ```
 
-The message can then be sent using regular Swift transports
-([see their documentation](http://swiftmailer.org/docs/sending.html)).
+([See Swift documentation for details on how to send messages using a
+`Swift_Transport` of your choice.](http://swiftmailer.org/docs/sending.html))
 
 ## Templates and variables
-Obviously, the above isn't particularly useful. Where Emily shines is in its
-inclusion of [Twig templates](http://twig.sensiolabs.org) as a source for
-emails:
+In your template, you can define a number of Twig "blocks" for the various
+parts of your message:
+
+```twig
+{% block subject %}This is the message subject!{% endblock subject %}
+{% block plain %}This is the plaintext content.{% endblock plain %}
+{% block html %}This is the <b>HTML</b>.{% endblock html %}
+{% block sender %}marijn@monomelodies.nl{% endblock sender %}
+
+```
+
+You can also use regular Twig variables:
+
+```twig
+{% block plain %}Hello, {{ firstname }}.{% endblock plain %}
+
+```
+
+...which you define using the `Message::setVariables` method:
 
 ```php
 <?php
 
-$message
-    ->addTemplate(
-        'template-id',
-        "
-            {% block subject %}my subject{% endblock %}
-            {% block html %}<p>Howdy, {{ name }}!</p>{% endblock %}
-            {% block text %}Howdy, {{ name }}!{% endblock %}
-        ",
-        time()
-    )
-    ->setVariables(['name' => 'partner']);
+//...
+$msg->setVariables(['firstname' => 'Marijn']);
 
 ```
 
-Using a Twig template, you can specify all relevant parts in blocks. And of
-course you can also extend and include other templates.
+Variables can be used in any block, including the subject.
 
-The 'template-id' can be referred to from other templates when extending:
+Of course, you can also let your messages extend a more global template using
+normal Twig extending rules.
 
-```php
-<?php
-
-$message
-    ->addTemplate(
-        'main-template',
-        "
-            {% block html %}
-                <img src="/my/logo.png">
-                {{ parent() }}
-            {% endblock %}
-        ",
-        time()
-    )
-    ->addTemplate(
-        'message-template',
-        "
-            {% extends 'main-template' %}
-            {% block html %}<p>Howdy!</p>{% endblock %}
-        "
-    );
-```
-
-> Emily leaves it to the developer to decide where they load their templates
-> from. For instance, if your project offers a CMS to clients you might need to
-> get them from a database instead of from file.
-
-The third parameter to `Email::addTemplate` is the last-modified-timestamp. Twig
-uses this internally to determine cache freshness.
-
-## Sending a Twig templated email
-For Twig-enabled message, the sending process is slightly different since we
-need Emily to actually render the templates. So, instead calling `send` on the
-mailer, we call `send` on the `Emily\Email` message and pass the transport to
-send it with:
-
-```php
-<?php
-
-$to = ['bob@builder.com', 'alice@wonderland.com'];
-$message = new Emily\Email
-    // setup stuff...
-    ;
-$transport = Swift_SmtpTransport::newInstance('localhost', 25);
-
-foreach ($to as $recipient) {
-    $message->setVariables(['email' => $recipient]);
-    $message->send($transport, $recipient);
-}
-
-```
-
-We could achieve the same thing by putting message creation inside the `foreach`
-loop, but trust us: if you're blasting out mails to 1000+ users you don't want
-to create an entire object with templates on each iteration.
+## Setting the recipient, adding attachments etc.
+The return value of `Emily\Message::get` is simply a `Swift_Message` (with all
+variables replaced), so you can do what you want with it. Note that after any
+variable change, you'll need to re-call `get` to receive and updated version.
 
