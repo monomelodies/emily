@@ -6,7 +6,6 @@
 
 namespace Emily;
 
-use Twig_LoaderInterface;
 use Twig_Environment;
 use Swift_Message;
 
@@ -27,18 +26,13 @@ class Message
     private $compiled = false;
 
     /**
-     * Constructor. Inject your desired Twig_Loader, and an optional second
-     * argument pointing to your template cache.
+     * Constructor. Inject your desired Twig_Environment.
      *
-     * @param Twig_LoaderInterface $loader Twig_Loader or implementation of one.
-     * @param mixed $cache Path to cache, or false.
+     * @param Twig_Environment $twig The Twig environment Emily should use.
      */
-    public function __construct(Twig_LoaderInterface $loader, $cache = '/tmp')
+    public function __construct(Twig_Environment $twig)
     {
-        $this->twig = new Twig_Environment($loader, [
-            'cache' => $cache,
-            'debug' => $cache ? false : true,
-        ]);
+        $this->twig = $twig;
     }
 
     /**
