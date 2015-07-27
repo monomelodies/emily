@@ -14,15 +14,12 @@ class Message
     const TYPE_HTML = 1;
     const TYPE_PLAIN = 2;
 
-    private $headers = [];
     private $variables = [];
-    private $content = [];
-    protected $twig;
+    private $twig;
     private $subject = null;
     private $sender = null;
     private $plain = null;
     private $html = null;
-    private $test = false;
     private $compiled = false;
 
     /**
@@ -107,6 +104,8 @@ class Message
     /**
      * Get the plaintext body. This is "automagically" inferred from the HTML
      * part if not supplied explicitly (via {% block plain %}).
+     *
+     * @return string The body text.
      */
     public function getBody()
     {
@@ -185,6 +184,9 @@ class Message
 
     /**
      * Get the HTML body, if supplied.
+     *
+     * @return string|null The HTML part's contents, or null if no such block
+     *                     was defined.
      */
     public function getHtml()
     {
