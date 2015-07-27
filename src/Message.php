@@ -129,75 +129,73 @@ class Message
     public function getBody()
     {
         $this->compile();
-        if (is_null($this->plain)) {
-            $txt = $this->html;
-            // Replace <br/> (in any variant) with newline.
-            $txt = preg_replace('@<br\s+?/?>@i', "\n", $txt);
-            
-            // Replace paragraph elements with newlines.
-            $txt = preg_replace(
-                '@<[Pp].*?>(.*?)</[Pp]>@ms',
-                "\n$1\n",
-                $txt
-            );
-            // ...but let's not overdo it...
-            $txt = str_replace("\n\n\n", "\n\n", $txt);
-            
-            // Replace <del> tags with \\1^W.
-            $txt = preg_replace_callback(
-                '@<del.*?>(.*?)</del>@msi',
-                function($match) {
-                    return preg_replace("@\s+@ms", "^W", $match[1]);
-                },
-                $txt
-            );
-            
-            // Replace anchors with something intelligent. For the best result
-            // you'll probably want to manually load a text/plain template, but at
-            // least this is better than nothing.
-            $replace = [];
-            if (preg_match_all(
-                '@<a.*?href="(.*?)">(.*?)</a>(.*?)[!.?]@msi',
-                $txt,
-                $matches
-            )) {
-                foreach ($matches[0] as $i => $match) {
-                    $replace[$match] = $matches[2][$i] // Part between <a> tags.
-                    .$matches[3][$i] // Part after up to end of sentence.
-                    .":\n{$matches[1][$i]}\n"; // URI on separate line.
-                }
+        $txt = is_null($this->plain) ? $this->html : $this->plain;
+        // Replace <br/> (in any variant) with newline.
+        $txt = preg_replace('@<br\s+?/?>@i', "\n", $txt);
+        
+        // Replace paragraph elements with newlines.
+        $txt = preg_replace(
+            '@<[Pp].*?>(.*?)</[Pp]>@ms',
+            "\n$1\n",
+            $txt
+        );
+        // ...but let's not overdo it...
+        $txt = str_replace("\n\n\n", "\n\n", $txt);
+        
+        // Replace <del> tags with \\1^W.
+        $txt = preg_replace_callback(
+            '@<del.*?>(.*?)</del>@msi',
+            function($match) {
+                return preg_replace("@\s+@ms", "^W", $match[1]);
+            },
+            $txt
+        );
+        
+        // Replace anchors with something intelligent. For the best result
+        // you'll probably want to manually load a text/plain template, but at
+        // least this is better than nothing.
+        $replace = [];
+        if (preg_match_all(
+            '@<a.*?href="(.*?)">(.*?)</a>(.*?)[!.?]@msi',
+            $txt,
+            $matches
+        )) {
+            foreach ($matches[0] as $i => $match) {
+                $replace[$match] = $matches[2][$i] // Part between <a> tags.
+                .$matches[3][$i] // Part after up to end of sentence.
+                .":\n{$matches[1][$i]}\n"; // URI on separate line.
             }
-            // Replace leftover anchors.
-            $txt = preg_replace_callback(
-                '@<a.*?href="(.*?)">(.*?)</a>@msi',
-                function($match) {
-                    return "{$match[1]}\n{$match[2]}";
-                },
-                $txt
-            );
-            
-            // Replace <b> or <strong> with *..*.
-            $txt = preg_replace(
-                '@<(b|strong).*?>(.*?)</\1>@msi',
-                "*\\2*",
-                $txt
-            );
-            // Replace <i> or <em> with /../.
-            $txt = preg_replace(
-                '@<(i|em).*?>(.*?)</\1>@msi',
-                "/\\2/",
-                $txt
-            );
-            $this->plain = trim(preg_replace(
-                '@^\s+@m',
-                "\n",
-                html_entity_decode(
-                    strip_tags($txt),
-                    ENT_QUOTES,
-                    'UTF-8'
-                )
-            ));
         }
+        // Replace leftover anchors.
+        $txt = preg_replace_callback(
+            '@<a.*?href="(.*?)">(.*?)</a>@msi',
+            function($match) {
+                return "{$match[1]}\n{$match[2]}";
+            },
+            $txt
+        );
+        
+        // Replace <b> or <strong> with *..*.
+        $txt = preg_replace(
+            '@<(b|strong).*?>(.*?)</\1>@msi',
+            "*\\2*",
+            $txt
+        );
+        // Replace <i> or <em> with /../.
+        $txt = preg_replace(
+            '@<(i|em).*?>(.*?)</\1>@msi',
+            "/\\2/",
+            $txt
+        );
+        $this->plain = trim(preg_replace(
+            '@^\s+@m',
+            "\n",
+            html_entity_decode(
+                strip_tags($txt),
+                ENT_QUOTES,
+                'UTF-8'
+            )
+        ));
         return $this->plain;
     }
 
