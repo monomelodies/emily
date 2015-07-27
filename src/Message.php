@@ -18,6 +18,7 @@ class Message
     private $twig;
     private $subject = null;
     private $sender = null;
+    private $senderName = null;
     private $plain = null;
     private $html = null;
     private $compiled = false;
@@ -65,7 +66,13 @@ class Message
         if ($this->compiled) {
             return;
         }
-        foreach (['subject', 'sender', 'plain', 'html'] as $block) {
+        foreach ([
+            'subject',
+            'sender',
+            'senderName',
+            'plain',
+            'html',
+        ] as $block) {
             ob_start();
             $this->template->displayBlock(
                 $block,
@@ -99,6 +106,18 @@ class Message
     {
         $this->compile();
         return $this->sender;
+    }
+
+    /**
+     * Get current sender name. Defaults to "sender" (the email address) if
+     * not provided.
+     *
+     * @return string The sender's name, or the email address if not set.
+     */
+    public function getSenderName()
+    {
+        $this->compile();
+        return isset($this->senderName) ? $this->senderName : $this->sender;
     }
 
     /**
@@ -218,7 +237,7 @@ class Message
     {
         $this->compile();
         $msg = Swift_Message::newInstance($this->subject)
-            ->setFrom($this->sender)
+            ->setFrom([$this->sender, $this->getSenderName()])
             ->setBody($this->getBody());
         if ($html = $this->getHtml()) {
             $msg->addPart($this->getHtml(), 'text/html');
