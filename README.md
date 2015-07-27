@@ -42,6 +42,7 @@ parts of your message:
 {% block plain %}This is the plaintext content.{% endblock plain %}
 {% block html %}This is the <b>HTML</b>.{% endblock html %}
 {% block sender %}marijn@monomelodies.nl{% endblock sender %}
+{% block sender_name %}Marijn Ophorst{% endblock sender_name %}
 
 ```
 
