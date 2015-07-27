@@ -9,9 +9,10 @@ class BasicTest extends PHPUnit_Framework_TestCase
 {% extends 'template' %}
 {% block subject %}Testing {{ product }}!{% endblock subject %}
 {% block sender %}marijn@monomelodies.nl{% endblock sender %}
-{% block content %}
+{% block sender_name %}Marijn Ophorst{% endblock sender_name %}
+{% block html_content %}
     <p>Hi there!</p>
-{% endblock content %}
+{% endblock html_content %}
 
 EOT
             ,
@@ -20,7 +21,7 @@ EOT
 <html>
     <body>
         <h1>Test template for {{ product }}</h1>
-        {% block content %}{% endblock content %}
+        {% block html_content %}{% endblock html_content %}
         <small>hugs and kisses</small>
     </body>
 </html>
@@ -57,14 +58,14 @@ EOT
         $loader = new Twig_Loader_Array([
             'mail' => <<<EOT
 {% extends 'template' %}
-{% block content %}
-<p>Hi there!</p>{% endblock content %}
+{% block html_content %}
+<p>Hi there!</p>{% endblock html_content %}
 
 EOT
             ,
             'template' => <<<EOT
 {% block html %}
-{% block content %}{% endblock content %}
+{% block html_content %}{% endblock html_content %}
 {% endblock html %}
 
 {% block plain %}
