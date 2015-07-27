@@ -29,7 +29,11 @@ EOT
 
 EOT
         ]);
-        $msg = new Emily\Message($loader, false);
+        $twig = new Twig_Environment(
+            $loader,
+            ['cache' => false, 'debug' => true]
+        );
+        $msg = new Emily\Message($twig);
         $msg->loadTemplate('mail');
         $msg->setVariables(['product' => 'Emily']);
         $this->assertEquals('Testing Emily!', $msg->getSubject());
@@ -68,7 +72,11 @@ This will contain something different.{% endblock plain %}
 
 EOT
         ]);
-        $msg = new Emily\Message($loader, false);
+        $twig = new Twig_Environment(
+            $loader,
+            ['cache' => false, 'debug' => true]
+        );
+        $msg = new Emily\Message($twig);
         $msg->loadTemplate('mail');
         $this->assertEquals('<p>Hi there!</p>', $msg->getHtml());
         $this->assertEquals(
