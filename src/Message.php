@@ -235,7 +235,7 @@ class Message
     {
         $this->compile();
         $msg = Swift_Message::newInstance($this->subject)
-            ->setFrom([$this->sender, $this->getSenderName()])
+            ->setFrom([$this->sender => $this->getSenderName()])
             ->setBody($this->getBody());
         if ($html = $this->getHtml()) {
             $msg->addPart($this->getHtml(), 'text/html');
