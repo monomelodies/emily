@@ -17,8 +17,14 @@ Define an `Emily\Message` and setup a Twig template:
 
 use Emily\Message;
 
-$msg = new Message(new Twig_Loader_Filesystem('/path/to/templates'));
+$loader = new Twig_Loader_Filesystem('/path/to/templates');
+$twig = new Twig_Environment($loader);
+
+// Inject the Twig_Environment to use via the Message constructor:
+$msg = new Message($twig);
 $msg->loadTemplate('path/to/template.html.twig');
+
+// When done, export the Swift_Message using Emily\Message::get
 $swift = $msg->get();
 // Now, send $swift using regular transport.
 
@@ -46,7 +52,7 @@ You can also use regular Twig variables:
 
 ```
 
-...which you define using the `Message::setVariables` method:
+...which you define using the `Emily\Message::setVariables` method:
 
 ```php
 <?php
@@ -59,10 +65,13 @@ $msg->setVariables(['firstname' => 'Marijn']);
 Variables can be used in any block, including the subject.
 
 Of course, you can also let your messages extend a more global template using
-normal Twig extending rules.
+normal Twig extending rules. Templates can also define _other_ blocks (e.g. some
+kind of sidebar in your template with the latest news posts at the moment of
+sending - use your imagination here). Depending on your `Twig_Environment`, you
+might also use translations etc.
 
 ## Setting the recipient, adding attachments etc.
 The return value of `Emily\Message::get` is simply a `Swift_Message` (with all
 variables replaced), so you can do what you want with it. Note that after any
-variable change, you'll need to re-call `get` to receive and updated version.
+variable change, you'll need to re-call `get` to receive an updated version.
 
