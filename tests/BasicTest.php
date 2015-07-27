@@ -36,7 +36,6 @@ EOT
         $this->assertEquals('marijn@monomelodies.nl', $msg->getSender());
         $msg->setVariables(['product' => 'Swift_Mailer']);
         $this->assertEquals('Testing Swift_Mailer!', $msg->getSubject());
-        $swift = $msg->get();
         $this->assertEquals(<<<EOT
 Test template for Swift_Mailer
 
@@ -45,6 +44,35 @@ Hi there!
 hugs and kisses
 EOT
             ,
+            $msg->getBody()
+        );
+    }
+
+    public function testPlainAndHtml()
+    {
+        $loader = new Twig_Loader_Array([
+            'mail' => <<<EOT
+{% extends 'template' %}
+{% block content %}
+<p>Hi there!</p>{% endblock content %}
+
+EOT
+            ,
+            'template' => <<<EOT
+{% block html %}
+{% block content %}{% endblock content %}
+{% endblock html %}
+
+{% block plain %}
+This will contain something different.{% endblock plain %}
+
+EOT
+        ]);
+        $msg = new Emily\Message($loader, false);
+        $msg->loadTemplate('mail');
+        $this->assertEquals('<p>Hi there!</p>', $msg->getHtml());
+        $this->assertEquals(
+            'This will contain something different.',
             $msg->getBody()
         );
     }
