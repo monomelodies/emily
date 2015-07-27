@@ -69,7 +69,7 @@ class Message
         foreach ([
             'subject',
             'sender',
-            'senderName',
+            'sender_name',
             'plain',
             'html',
         ] as $block) {
@@ -117,7 +117,7 @@ class Message
     public function getSenderName()
     {
         $this->compile();
-        return isset($this->senderName) ? $this->senderName : $this->sender;
+        return isset($this->sender_name) ? $this->sender_name : $this->sender;
     }
 
     /**
