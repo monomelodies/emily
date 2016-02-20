@@ -76,3 +76,21 @@ The return value of `Emily\Message::get` is simply a `Swift_Message` (with all
 variables replaced), so you can do what you want with it. Note that after any
 variable change, you'll need to re-call `get` to receive an updated version.
 
+## Testing emails
+Of course, you could just write a scripts that constantly mails your test mails
+to your own email address, but that's a bit tiresome. An easier way - at least
+for initial development, eventually you'll want to test mails in actual clients
+- is to use Emily's `Preview` class.
+
+Initialise the object with your `Emily\Message` object as its parameter. Then,
+call the `render` method to display a simple HTML page to develop your mails in.
+
+> We mean a _full_ HTML page, so that includes `<head>` andsoforth. Either load
+> this in a separate PHP file or instruct your router or front controller or
+> whatever you use not to wrap it in any template.
+
+Enter the name of the template to test (this should be resolvable by the Twig
+loader in your `Message` object) and optionally a JSON-encoded string of
+variables to inject. Click "submit". Awesomeness! Now during testing just reload
+the page whenever you've changed something and see how it works out.
+
