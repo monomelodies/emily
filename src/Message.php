@@ -129,7 +129,10 @@ class Message
     public function getBody()
     {
         $this->compile();
-        $txt = is_null($this->plain) ? $this->html : $this->plain;
+        if (isset($this->plain)) {
+            return $this->plain;
+        }
+        $txt = $this->html;
         // Replace <br/> (in any variant) with newline.
         $txt = preg_replace('@<br\s+?/?>@i', "\n", $txt);
         
