@@ -244,9 +244,9 @@ class Message
             ->setFrom([$this->sender => $this->getSenderName()])
             ->setBody($this->getBody());
         if ($html = $this->getHtml()) {
-            $msg->addPart($this->getHtml(), 'text/html');
+            $this->msg->addPart($this->getHtml(), 'text/html');
         }
-        return $msg;
+        return $this->msg;
     }
 
     /**
