@@ -132,10 +132,14 @@ class Message
     public function getBody()
     {
         $this->compile();
-        if (isset($this->plain)) {
-            return $this->plain;
+        if (!isset($this->plain)) {
+            $this->plain = $this->strip($this->html);
         }
-        $txt = $this->html;
+        return $this->plain;
+    }
+
+    public function strip($txt)
+    {
         // Replace <br/> (in any variant) with newline.
         $txt = preg_replace('@<br\s+?/?>@i', "\n", $txt);
         
@@ -193,7 +197,7 @@ class Message
             "/\\2/",
             $txt
         );
-        $this->plain = trim(preg_replace(
+        return trim(preg_replace(
             '@^\s+@m',
             "\n",
             html_entity_decode(
@@ -202,7 +206,6 @@ class Message
                 'UTF-8'
             )
         ));
-        return $this->plain;
     }
 
     /**
@@ -242,9 +245,9 @@ class Message
         $this->compile();
         $this->msg->setSubject($this->subject)
             ->setFrom([$this->sender => $this->getSenderName()])
-            ->setBody($this->getBody());
+            ->addPart($this->strip($this->getBody()), 'text/plain');
         if ($html = $this->getHtml()) {
-            $this->msg->addPart($this->getHtml(), 'text/html');
+            $this->msg->addPart($html, 'text/html');
         }
         return $this->msg;
     }
