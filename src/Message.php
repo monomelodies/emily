@@ -33,6 +33,14 @@ class Message
     public function __construct(Twig_Environment $twig)
     {
         $this->twig = $twig;
+        $this->clean();
+    }
+
+    /**
+     * Clean the current message by reloading.
+     */
+    public function clean()
+    {
         $this->msg = Swift_Message::newInstance();
     }
 
