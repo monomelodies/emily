@@ -8,6 +8,7 @@ namespace Emily;
 
 use Twig_Environment;
 use Swift_Message;
+use DomainException;
 
 class Message
 {
@@ -16,6 +17,7 @@ class Message
 
     private $variables = [];
     private $twig;
+    private $msg;
     private $subject = null;
     private $sender = null;
     private $senderName = null;
@@ -31,6 +33,7 @@ class Message
     public function __construct(Twig_Environment $twig)
     {
         $this->twig = $twig;
+        $this->msg = Swift_Message::newInstance()
     }
 
     /**
@@ -237,13 +240,24 @@ class Message
     public function get()
     {
         $this->compile();
-        $msg = Swift_Message::newInstance($this->subject)
+        $this->msg->setSubject($this->subject)
             ->setFrom([$this->sender => $this->getSenderName()])
             ->setBody($this->getBody());
         if ($html = $this->getHtml()) {
             $msg->addPart($this->getHtml(), 'text/html');
         }
         return $msg;
+    }
+
+    /**
+     * Proxy all other calls to the underlying message, if such a method exists.
+     */
+    public function __call($fn, array $args = [])
+    {
+        if (method_exists($this->msg, $fn)) {
+            return call_user_func_array([$this->msg, $fn], $args);
+        }
+        throw new DomainException("Method $fn does not exist");
     }
 }
 
