@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @package Emily
+ * @package Monomelodies\Emily
  */
 
-namespace Emily;
+namespace Monomelodies\Emily;
 
 use Twig_Environment;
 use Swift_Message;
