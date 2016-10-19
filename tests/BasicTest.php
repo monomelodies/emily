@@ -34,7 +34,7 @@ EOT
             $loader,
             ['cache' => false, 'debug' => true]
         );
-        $msg = new Emily\Message($twig);
+        $msg = new Monomelodies\Emily\Message($twig);
         $msg->loadTemplate('mail');
         $msg->setVariables(['product' => 'Emily']);
         $this->assertEquals('Testing Emily!', $msg->getSubject());
@@ -77,7 +77,7 @@ EOT
             $loader,
             ['cache' => false, 'debug' => true]
         );
-        $msg = new Emily\Message($twig);
+        $msg = new Monomelodies\Emily\Message($twig);
         $msg->loadTemplate('mail');
         $this->assertEquals('<p>Hi there!</p>', $msg->getHtml());
         $this->assertEquals(
