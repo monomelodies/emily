@@ -1,6 +1,6 @@
 <?php
 
-namespace Emily;
+namespace Monomelodies\Emily;
 
 class Preview
 {
