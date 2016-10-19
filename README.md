@@ -15,7 +15,7 @@ Define an `Emily\Message` and setup a Twig template:
 ```php
 <?php
 
-use Emily\Message;
+use Monomelodies\Emily\Message;
 
 $loader = new Twig_Loader_Filesystem('/path/to/templates');
 $twig = new Twig_Environment($loader);
@@ -72,9 +72,10 @@ sending - use your imagination here). Depending on your `Twig_Environment`, you
 might also use translations etc.
 
 ## Setting the recipient, adding attachments etc.
-The return value of `Emily\Message::get` is simply a `Swift_Message` (with all
-variables replaced), so you can do what you want with it. Note that after any
-variable change, you'll need to re-call `get` to receive an updated version.
+The return value of `Monomelodies\Emily\Message::get` is simply a
+`Swift_Message` (with all variables replaced), so you can do what you want with
+it. Note that after any variable change, you'll need to re-call `get` to receive
+an updated version.
 
 ## Testing emails
 Of course, you could just write a scripts that constantly mails your test mails
