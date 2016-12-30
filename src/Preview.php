@@ -97,7 +97,7 @@ class Preview
 EOT;
         if (isset($template)) {
             $this->emily->loadTemplate($template);
-            if (isset($vars)) {
+            if ($vars) {
                 $this->emily->setVariables(json_decode($vars, true));
             }
             printf(
