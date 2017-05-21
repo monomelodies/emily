@@ -41,7 +41,7 @@ class Message
      */
     public function clean()
     {
-        $this->msg = Swift_Message::newInstance();
+        $this->msg = new Swift_Message;
     }
 
     /**
