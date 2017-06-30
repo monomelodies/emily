@@ -262,7 +262,7 @@ class Message
         $this->compile();
         $this->msg->setSubject($this->subject)
             ->setFrom([$this->sender => $this->getSenderName()])
-            ->addPart($this->plain), 'text/plain');
+            ->addPart($this->plain, 'text/plain');
         if ($html = $this->getHtml()) {
             if (isset($this->css)) {
                 if (!isset($cssToInlineStyles)) {
