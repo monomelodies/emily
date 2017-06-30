@@ -32,14 +32,12 @@ class Message
      * Constructor. Inject your desired Twig_Environment.
      *
      * @param Twig_Environment $twig The Twig environment Emily should use.
-     * @param string $css Optional path to CSS file to use for inline styles.
+     * @param string $css Optional string of CSS to use for inline styles.
      */
     public function __construct(Twig_Environment $twig, string $css = null)
     {
         $this->twig = $twig;
-        if (isset($css) && file_exists($css)) {
-            $this->css = file_get_contents($css);
-        }
+        $this->css = $css;
         $this->clean();
     }
 
