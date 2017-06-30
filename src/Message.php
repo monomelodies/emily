@@ -79,6 +79,7 @@ class Message
 
     public function compile()
     {
+        static $cssToInlineStyles;
         if ($this->compiled) {
             return;
         }
@@ -98,6 +99,12 @@ class Message
                 $content = ob_get_clean();
                 if (strlen(trim($content))) {
                     $this->$block = $content;
+                    if ($block == 'html' && isset($this->css)) {
+                        if (!isset($cssToInlineStyles)) {
+                            $cssToInlineStyles = new CssToInlineStyles;
+                        }
+                        $this->html = $cssToInlineStyles->convert($this->html, $this->css);
+                    }
                 }
             } catch (Twig_Error_Runtime $e) {
             }
@@ -258,18 +265,11 @@ class Message
      */
     public function get()
     {
-        static $cssToInlineStyles;
         $this->compile();
         $this->msg->setSubject($this->subject)
             ->setFrom([$this->sender => $this->getSenderName()])
             ->addPart($this->plain, 'text/plain');
         if ($html = $this->getHtml()) {
-            if (isset($this->css)) {
-                if (!isset($cssToInlineStyles)) {
-                    $cssToInlineStyles = new CssToInlineStyles;
-                }
-                $html = $cssToInlineStyles->convert($html, $this->css);
-            }
             $this->msg->addPart($html, 'text/html');
         }
         return $this->msg;
