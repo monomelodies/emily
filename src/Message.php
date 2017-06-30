@@ -10,6 +10,7 @@ use Twig_Environment;
 use Swift_Message;
 use DomainException;
 use Twig_Error_Runtime;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 class Message
 {
@@ -18,6 +19,7 @@ class Message
 
     private $variables = [];
     private $twig;
+    private $css;
     private $msg;
     private $subject = null;
     private $sender = null;
@@ -30,10 +32,14 @@ class Message
      * Constructor. Inject your desired Twig_Environment.
      *
      * @param Twig_Environment $twig The Twig environment Emily should use.
+     * @param string $css Optional path to CSS file to use for inline styles.
      */
-    public function __construct(Twig_Environment $twig)
+    public function __construct(Twig_Environment $twig, string $css = null)
     {
         $this->twig = $twig;
+        if (isset($css) && file_exists($css)) {
+            $this->css = file_get_contents($css);
+        }
         $this->clean();
     }
 
@@ -254,11 +260,18 @@ class Message
      */
     public function get()
     {
+        static $cssToInlineStyles;
         $this->compile();
         $this->msg->setSubject($this->subject)
             ->setFrom([$this->sender => $this->getSenderName()])
-            ->addPart($this->strip($this->getBody()), 'text/plain');
+            ->addPart($this->plain), 'text/plain');
         if ($html = $this->getHtml()) {
+            if (isset($this->css)) {
+                if (!isset($cssToInlineStyles)) {
+                    $cssToInlineStyles = new CssToInlineStyles;
+                }
+                $html = $cssToInlineStyles->convert($html, $this->css);
+            }
             $this->msg->addPart($html, 'text/html');
         }
         return $this->msg;
