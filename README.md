@@ -10,7 +10,7 @@ for the following:
 - Auto-insert guesstimated text part if only HTML was given.
 
 ## Usage
-Define an `Emily\Message` and setup a Twig template:
+Define an `Monomelodies\Emily\Message` and setup a Twig template:
 
 ```php
 <?php
@@ -24,7 +24,7 @@ $twig = new Twig_Environment($loader);
 $msg = new Message($twig);
 $msg->loadTemplate('path/to/template.html.twig');
 
-// When done, export the Swift_Message using Emily\Message::get
+// When done, export the Swift_Message using Monomelodies\Emily\Message::get
 $swift = $msg->get();
 // Now, send $swift using regular transport.
 
@@ -83,14 +83,15 @@ to your own email address, but that's a bit tiresome. An easier way - at least
 for initial development, eventually you'll want to test mails in actual clients
 - is to use Emily's `Preview` class.
 
-Initialise the object with your `Emily\Message` object as its parameter. Then,
-call the `render` method to display a simple HTML page to develop your mails in.
+Initialise the object with your `Monomelodies\Emily\Message` object as its
+parameter. Then, call the `render` method to display a simple HTML page to
+develop your mails in.
 
 > We mean a _full_ HTML page, so that includes `<head>` andsoforth. Either load
 > this in a separate PHP file or instruct your router or front controller or
 > whatever you use not to wrap it in any template.
 
-Enter the name of the template to test (this should be resolvable by the Twig
+Enter the name of the template to test (this should be resolvable by the `Twig`
 loader in your `Message` object) and optionally a JSON-encoded string of
 variables to inject. Click "submit". Awesomeness! Now during testing just reload
 the page whenever you've changed something and see how it works out.
