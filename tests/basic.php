@@ -1,9 +1,9 @@
 <?php
 
-class BasicTest extends PHPUnit_Framework_TestCase
-{
-    public function testSimpleMessage()
-    {
+/** Basic mail template tests */
+return function () : Generator {
+    /** Test a simple message */
+    yield function () : Generator {
         $loader = new Twig_Loader_Array([
             'mail' => <<<EOT
 {% extends 'template' %}
@@ -37,24 +37,36 @@ EOT
         $msg = new Monomelodies\Emily\Message($twig);
         $msg->loadTemplate('mail');
         $msg->setVariables(['product' => 'Emily']);
-        $this->assertEquals('Testing Emily!', $msg->getSubject());
-        $this->assertEquals('marijn@monomelodies.nl', $msg->getSender());
+
+        /** Subject is set correctly */
+        yield function () use ($msg) {
+            assert('Testing Emily!' == $msg->getSubject());
+        };
+        /** Sender is set correctly */
+        yield function () use ($msg) {
+            assert('marijn@monomelodies.nl' == $msg->getSender());
+        };
         $msg->setVariables(['product' => 'Swift_Mailer']);
-        $this->assertEquals('Testing Swift_Mailer!', $msg->getSubject());
-        $this->assertEquals(<<<EOT
+        /** Subject can be overridden */
+        yield function () use ($msg) {
+            assert('Testing Swift_Mailer!' == $msg->getSubject());
+        };
+        /** Body is set correctly */
+        yield function () use ($msg) {
+            assert(<<<EOT
 Test template for Swift_Mailer
 
 Hi there!
 
 hugs and kisses
 EOT
-            ,
-            $msg->getBody()
-        );
-    }
+                == $msg->getBody()
+            );
+        };
+    };
 
-    public function testPlainAndHtml()
-    {
+    /** Test mixing plain and html */
+    yield function () : Generator {
         $loader = new Twig_Loader_Array([
             'mail' => <<<EOT
 {% extends 'template' %}
@@ -79,11 +91,14 @@ EOT
         );
         $msg = new Monomelodies\Emily\Message($twig);
         $msg->loadTemplate('mail');
-        $this->assertEquals('<p>Hi there!</p>', $msg->getHtml());
-        $this->assertEquals(
-            'This will contain something different.',
-            $msg->getBody()
-        );
-    }
-}
+        /** The HTML part is set correctly */
+        yield function () use ($msg) {
+            assert('<p>Hi there!</p>' == $msg->getHtml());
+        };
+        /** The plain text part is set correctly */
+        yield function () use ($msg) {
+            assert('This will contain something different.' == $msg->getBody());
+        };
+    };
+};
 
