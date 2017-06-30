@@ -9,6 +9,7 @@ namespace Monomelodies\Emily;
 use Twig_Environment;
 use Swift_Message;
 use DomainException;
+use Twig_Error_Runtime;
 
 class Message
 {
@@ -85,13 +86,16 @@ class Message
             'html',
         ] as $block) {
             ob_start();
-            $this->template->displayBlock(
-                $block,
-                $this->variables
-            );
-            $content = ob_get_clean();
-            if (strlen(trim($content))) {
-                $this->$block = $content;
+            try {
+                $this->template->displayBlock(
+                    $block,
+                    $this->variables
+                );
+                $content = ob_get_clean();
+                if (strlen(trim($content))) {
+                    $this->$block = $content;
+                }
+            } catch (Twig_Error_Runtime $e) {
             }
         }
         $this->compiled = true;
