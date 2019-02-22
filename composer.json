@@ -11,7 +11,7 @@
     ],
     "require": {
         "twig/twig": ">=1.2",
-        "swiftmailer/swiftmailer": "@stable",
+        "swiftmailer/swiftmailer": "^6.1",
         "tijsverkoyen/css-to-inline-styles": "^2.2"
     },
     "require-dev": {
