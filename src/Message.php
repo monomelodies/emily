@@ -33,6 +33,7 @@ class Message
      *
      * @param Twig_Environment $twig The Twig environment Emily should use.
      * @param string $css Optional string of CSS to use for inline styles.
+     * @return void
      */
     public function __construct(Twig_Environment $twig, string $css = null)
     {
@@ -43,8 +44,10 @@ class Message
 
     /**
      * Clean the current message by reloading.
+     *
+     * @return void
      */
-    public function clean()
+    public function clean() : void
     {
         $this->msg = new Swift_Message;
     }
@@ -56,7 +59,7 @@ class Message
      * @param string $name Name of the template.
      * @return Emily\Message $this
      */
-    public function loadTemplate($name)
+    public function loadTemplate(string $name) : Message
     {
         $this->template = $this->twig->loadTemplate($name);
         return $this;
@@ -70,14 +73,19 @@ class Message
      * @param array $variables Array of key/value pairs
      * @return Emily\Message $this
      */
-    public function setVariables(array $variables)
+    public function setVariables(array $variables) : Message
     {
         $this->compiled = false;
         $this->variables = $variables + $this->variables;
         return $this;
     }
 
-    public function compile()
+    /**
+     * Compile the message. Replace variables and apply CSS.
+     *
+     * @return void
+     */
+    public function compile() : void
     {
         static $cssToInlineStyles;
         if ($this->compiled) {
@@ -117,7 +125,7 @@ class Message
      *
      * @return string|null The subject, or null if not set.
      */
-    public function getSubject()
+    public function getSubject() :? string
     {
         $this->compile();
         return $this->subject;
@@ -128,7 +136,7 @@ class Message
      *
      * @return string|null The sender, or null if not set.
      */
-    public function getSender()
+    public function getSender() :? string
     {
         $this->compile();
         return $this->sender;
@@ -140,7 +148,7 @@ class Message
      *
      * @return string The sender's name, or the email address if not set.
      */
-    public function getSenderName()
+    public function getSenderName() : string
     {
         $this->compile();
         return isset($this->sender_name) ? $this->sender_name : $this->sender;
@@ -152,7 +160,7 @@ class Message
      *
      * @return string The body text.
      */
-    public function getBody()
+    public function getBody() : string
     {
         $this->compile();
         if (!isset($this->plain)) {
@@ -161,7 +169,14 @@ class Message
         return $this->plain;
     }
 
-    public function strip($txt)
+    /**
+     * Strip HTML from the supplied text, and replace with something that sort
+     * of makes sense in a plaintext context.
+     *
+     * @param string $txt
+     * @return string
+     */
+    public function strip(string $txt) : string
     {
         // Replace <br/> (in any variant) with newline.
         $txt = preg_replace('@<br\s+?/?>@i', "\n", $txt);
@@ -237,7 +252,7 @@ class Message
      * @return string|null The HTML part's contents, or null if no such block
      *                     was defined.
      */
-    public function getHtml()
+    public function getHtml() :? string
     {
         $this->compile();
         return $this->html;
@@ -249,7 +264,7 @@ class Message
      * @param string $name Name of the variable.
      * @return mixed The value, or null if unset.
      */
-    public function getVariable($name)
+    public function getVariable(string $name)
     {
         return isset($this->variables[$name]) ?
             $this->variables[$name] :
@@ -263,7 +278,7 @@ class Message
      * @return Swift_Message A Swift message with all relevant values filled.
      * @see http://swiftmailer.org/docs/sending.html#transport-types
      */
-    public function get()
+    public function get() : Swift_Message
     {
         $this->compile();
         $this->msg->setSubject($this->subject)
@@ -277,6 +292,9 @@ class Message
 
     /**
      * Proxy all other calls to the underlying message, if such a method exists.
+     *
+     * @return mixed
+     * @throws DomainException if the method does not exist.
      */
     public function __call($fn, array $args = [])
     {

@@ -10,6 +10,7 @@
         }
     ],
     "require": {
+        "php": ">=7.3",
         "twig/twig": ">=1.2",
         "swiftmailer/swiftmailer": "^6.1",
         "tijsverkoyen/css-to-inline-styles": "^2.2"

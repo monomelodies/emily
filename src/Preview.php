@@ -6,12 +6,23 @@ class Preview
 {
     protected $emily;
 
+    /**
+     * Constructor.
+     *
+     * @param Monomelodies\Emily\Message
+     * @return void
+     */
     public function __construct(Message $emily)
     {
         $this->emily = $emily;
     }
 
-    public function render()
+    /**
+     * Render the message preview as HTML.
+     *
+     * @return string
+     */
+    public function render() : string
     {
         $template = isset($_POST['template']) ? $_POST['template'] : null;
         $vars = isset($_POST['vars']) ? $_POST['vars'] : null;
@@ -118,7 +129,13 @@ EOT;
         return ob_get_clean();
     }
 
-    protected function preview($html)
+    /**
+     * Make rendered HTML previewable (i.e., not wrapped in full <body> tags).
+     *
+     * @param string $html
+     * @return string
+     */
+    protected function preview(string $html) : string
     {
         if (!preg_match('@(<body.*?/body>)@ims', $html, $match)) {
             return $html;
