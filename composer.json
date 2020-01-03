@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7.3",
-        "twig/twig": "^2.11.2",
+        "twig/twig": "^3",
         "swiftmailer/swiftmailer": "^6.1",
         "tijsverkoyen/css-to-inline-styles": "^2.2"
     },

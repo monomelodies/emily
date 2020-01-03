@@ -4,7 +4,7 @@
 return function () : Generator {
     /** Test a simple message */
     yield function () : Generator {
-        $loader = new Twig_Loader_Array([
+        $loader = new Twig\Loader\ArrayLoader([
             'mail' => <<<EOT
 {% extends 'template' %}
 {% block subject %}Testing {{ product }}!{% endblock subject %}
@@ -30,7 +30,7 @@ EOT
 
 EOT
         ]);
-        $twig = new Twig_Environment(
+        $twig = new Twig\Environment(
             $loader,
             ['cache' => false, 'debug' => true]
         );
@@ -67,7 +67,7 @@ EOT
 
     /** Test mixing plain and html */
     yield function () : Generator {
-        $loader = new Twig_Loader_Array([
+        $loader = new Twig\Loader\ArrayLoader([
             'mail' => <<<EOT
 {% extends 'template' %}
 {% block html_content %}
@@ -85,7 +85,7 @@ This will contain something different.{% endblock plain %}
 
 EOT
         ]);
-        $twig = new Twig_Environment(
+        $twig = new Twig\Environment(
             $loader,
             ['cache' => false, 'debug' => true]
         );
