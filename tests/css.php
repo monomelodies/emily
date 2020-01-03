@@ -4,7 +4,7 @@
 return function () : Generator {
     /** Test a message with CSS */
     yield function () : Generator {
-        $loader = new Twig_Loader_Array([
+        $loader = new Twig\Loader\ArrayLoader([
             'mail' => <<<EOT
 {% extends 'template' %}
 {% block subject %}Testing{% endblock subject %}
@@ -34,7 +34,7 @@ EOT
 
 EOT
         ]);
-        $twig = new Twig_Environment(
+        $twig = new Twig\Environment(
             $loader,
             ['cache' => false, 'debug' => true]
         );
