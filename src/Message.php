@@ -6,10 +6,9 @@
 
 namespace Monomelodies\Emily;
 
-use Twig_Environment;
+use Twig\{ Environment, Error\RuntimeError };
 use Swift_Message;
 use DomainException;
-use Twig_Error_Runtime;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 class Message
@@ -29,13 +28,13 @@ class Message
     private $compiled = false;
 
     /**
-     * Constructor. Inject your desired Twig_Environment.
+     * Constructor. Inject your desired Twig\Environment.
      *
-     * @param Twig_Environment $twig The Twig environment Emily should use.
+     * @param Twig\Environment $twig The Twig environment Emily should use.
      * @param string $css Optional string of CSS to use for inline styles.
      * @return void
      */
-    public function __construct(Twig_Environment $twig, string $css = null)
+    public function __construct(Environment $twig, string $css = null)
     {
         $this->twig = $twig;
         $this->css = $css;
@@ -114,7 +113,7 @@ class Message
                         $this->html = $cssToInlineStyles->convert($this->html, $this->css);
                     }
                 }
-            } catch (Twig_Error_Runtime $e) {
+            } catch (RuntimeError $e) {
             }
         }
         $this->compiled = true;
