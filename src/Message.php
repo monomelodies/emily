@@ -60,7 +60,7 @@ class Message
      */
     public function loadTemplate(string $name) : Message
     {
-        $this->template = $this->twig->loadTemplate($name);
+        $this->template = $this->twig->load($name);
         return $this;
     }
 
