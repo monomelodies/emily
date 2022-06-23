@@ -16,7 +16,7 @@
         "symfony/mailer": "^6.1"
     },
     "require-dev": {
-        "toast/unit": "^1.1"
+        "toast/unit": "^2.2"
     },
     "autoload": {
         "psr-4": {
