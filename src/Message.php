@@ -7,7 +7,7 @@
 namespace Monomelodies\Emily;
 
 use Twig\{ Environment, Error\RuntimeError };
-use Swift_Message;
+use Symfony\Component\Mime\Email;
 use DomainException;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
@@ -48,7 +48,7 @@ class Message
      */
     public function clean() : void
     {
-        $this->msg = new Swift_Message;
+        $this->msg = new Email;
     }
 
     /**
