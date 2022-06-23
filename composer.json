@@ -12,8 +12,8 @@
     "require": {
         "php": ">=7.3",
         "twig/twig": "^2|^3",
-        "swiftmailer/swiftmailer": "^6.1",
-        "tijsverkoyen/css-to-inline-styles": "^2.2"
+        "tijsverkoyen/css-to-inline-styles": "^2.2",
+        "symfony/mailer": "^6.1"
     },
     "require-dev": {
         "toast/unit": "^1.1"
