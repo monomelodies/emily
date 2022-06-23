@@ -1,8 +1,8 @@
 # Emily
 Twig and Swift_Mailer-based mailer
 
-Emily is an extension to [Swift_Mailer](http://swiftmailer.org) adding support
-for the following:
+Emily is an extension to [Symfony Mailer](https://symfony.com/doc/current/mailer.html)
+adding support for the following:
 
 - Load Twig templates either from disk or some other source (database etc.);
 - Define blocks for various sections (subject, sender, body etc.) allowing
@@ -17,8 +17,8 @@ Define an `Monomelodies\Emily\Message` and setup a Twig template:
 
 use Monomelodies\Emily\Message;
 
-$loader = new Twig_Loader_Filesystem('/path/to/templates');
-$twig = new Twig_Environment($loader);
+$loader = new Twig\Loader\FilesystemLoader('/path/to/templates');
+$twig = new Twig\Environment($loader);
 
 // Inject the Twig_Environment to use via the Message constructor:
 $msg = new Message($twig);
@@ -73,9 +73,9 @@ might also use translations etc.
 
 ## Setting the recipient, adding attachments etc.
 The return value of `Monomelodies\Emily\Message::get` is simply a
-`Swift_Message` (with all variables replaced), so you can do what you want with
-it. Note that after any variable change, you'll need to re-call `get` to receive
-an updated version.
+`Symfony\Component\Mime\Email` (with all variables replaced), so you can do what
+you want with it. Note that after any variable change, you'll need to re-call
+`get` to receive an updated version.
 
 ## Testing emails
 Of course, you could just write a scripts that constantly mails your test mails
@@ -95,4 +95,12 @@ Enter the name of the template to test (this should be resolvable by the `Twig`
 loader in your `Message` object) and optionally a JSON-encoded string of
 variables to inject. Click "submit". Awesomeness! Now during testing just reload
 the page whenever you've changed something and see how it works out.
+
+## Inlining CSS
+For best results, HTML mails should use _inline_ CSS, not an external
+or embedded stylesheet. The Message constructor accepts a string of CSS to be
+inlined. This means you can use classnames and IDs and whatnot in your mail
+templates, as if you're building an actual webpage. This is highly useful, since
+normally your fancy mails will want to somewhat mimick the accompanying
+website's appearance!
 
