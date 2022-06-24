@@ -150,7 +150,7 @@ class Message
     public function getSenderName() : string
     {
         $this->compile();
-        return isset($this->sender_name) ? $this->sender_name : $this->sender;
+        return $this->sender_name ?? $this->sender;
     }
 
     /**
@@ -277,11 +277,11 @@ class Message
      * @return Swift_Message A Swift message with all relevant values filled.
      * @see http://swiftmailer.org/docs/sending.html#transport-types
      */
-    public function get() : Swift_Message
+    public function get() : Email
     {
         $this->compile();
-        $this->msg->setSubject($this->subject)
-            ->setFrom([$this->sender => $this->getSenderName()])
+        $this->msg->subject($this->subject)
+            ->from([$this->sender => $this->getSenderName()])
             ->addPart($this->plain, 'text/plain');
         if ($html = $this->getHtml()) {
             $this->msg->addPart($html, 'text/html');
