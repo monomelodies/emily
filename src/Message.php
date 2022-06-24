@@ -7,7 +7,7 @@
 namespace Monomelodies\Emily;
 
 use Twig\{ Environment, Error\RuntimeError };
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\{ Email, Address };
 use DomainException;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
@@ -274,17 +274,18 @@ class Message
      * Get the complete, compiled message ready for sending using a
      * Swift_Transport.
      *
-     * @return Swift_Message A Swift message with all relevant values filled.
-     * @see http://swiftmailer.org/docs/sending.html#transport-types
+     * @return Symfony\Component\Mime\Email An email message with all relevant
+     *  values filled. Feel free to add stuff like Ccs afterwards!
+     * @see https://symfony.com/doc/current/mailer.html
      */
     public function get() : Email
     {
         $this->compile();
         $this->msg->subject($this->subject)
-            ->from([$this->sender => $this->getSenderName()])
-            ->addPart($this->plain, 'text/plain');
+            ->from(new Address($this->sender, $this->getSenderName()))
+            ->text($this->plain);
         if ($html = $this->getHtml()) {
-            $this->msg->addPart($html, 'text/html');
+            $this->msg->html($html, 'text/html');
         }
         return $this->msg;
     }
