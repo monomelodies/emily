@@ -1,5 +1,5 @@
 # Emily
-Twig and Swift_Mailer-based mailer
+Twig and Symfony Mailer-based HTML emails
 
 Emily is an extension to [Symfony Mailer](https://symfony.com/doc/current/mailer.html)
 adding support for the following:
