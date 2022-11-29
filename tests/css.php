@@ -53,7 +53,8 @@ EOT;
         $msg->loadTemplate('mail');
         $expected = <<<EOT
 <!doctype html>
-<html><body>
+<html>
+    <body>
         <a href></a>
 <div style="border: 1px solid red;">
     <a href style="color: blue;"></a>
@@ -61,7 +62,8 @@ EOT;
         <a href style="color: blue; font-weight: bold;"></a>
     </p>
 </div>
-    </body></html>
+    </body>
+</html>
 EOT;
         /** The HTML part is set correctly */
         yield function () use ($msg, $expected) {
