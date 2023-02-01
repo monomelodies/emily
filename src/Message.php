@@ -16,16 +16,25 @@ class Message
     const TYPE_HTML = 1;
     const TYPE_PLAIN = 2;
 
-    private $variables = [];
-    private $twig;
-    private $css;
+    private array $variables = [];
+
+    private Environment $twig;
+
+    private string $css;
+
     private $msg;
-    private $subject = null;
-    private $sender = null;
-    private $senderName = null;
-    private $plain = null;
-    private $html = null;
-    private $compiled = false;
+
+    private ?string $subject = null;
+
+    private ?string $sender = null;
+
+    private ?string $senderName = null;
+
+    private ?string $plain = null;
+
+    private ?string $html = null;
+
+    private bool $compiled = false;
 
     /**
      * Constructor. Inject your desired Twig\Environment.
