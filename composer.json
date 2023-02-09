@@ -13,7 +13,8 @@
         "php": ">=7.3",
         "twig/twig": "^2|^3",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "symfony/mailer": "^6.1"
+        "symfony/mailer": "^6.1",
+        "symfony/mime": "^6.2"
     },
     "require-dev": {
         "toast/unit": "^2.2"
