@@ -20,7 +20,7 @@ class Message
 
     private Environment $twig;
 
-    private string $css;
+    private ?string $css;
 
     private $msg;
 
