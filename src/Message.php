@@ -6,7 +6,7 @@
 
 namespace Monomelodies\Emily;
 
-use Twig\{ Environment, Error\RuntimeError };
+use Twig\{ Environment, Error\RuntimeError, TemplateWrapper };
 use Symfony\Component\Mime\{ Email, Address };
 use DomainException;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
@@ -28,13 +28,15 @@ class Message
 
     private ?string $sender = null;
 
-    private ?string $senderName = null;
+    private ?string $sender_name = null;
 
     private ?string $plain = null;
 
     private ?string $html = null;
 
     private bool $compiled = false;
+
+    private TemplateWrapper $template;
 
     /**
      * Constructor. Inject your desired Twig\Environment.
