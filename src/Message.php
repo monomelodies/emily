@@ -45,7 +45,7 @@ class Message
      * @param string $css Optional string of CSS to use for inline styles.
      * @return void
      */
-    public function __construct(Environment $twig, string $css = null)
+    public function __construct(Environment $twig, ?string $css = null)
     {
         $this->twig = $twig;
         $this->css = $css;
